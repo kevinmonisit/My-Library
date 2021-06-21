@@ -3,3 +3,4 @@ package.json
 
 .eslintrc.json
 package-lock.json
+.vscode/settings.json
