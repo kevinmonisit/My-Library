@@ -1,5 +1,6 @@
 /* eslint-disable indent */
-let myLibrary = [];
+const myLibrary = [];
+const bookList = document.getElementById('book-content');
 
 /**
  *
@@ -31,25 +32,23 @@ function addBookToLibrary(book) {
  */
 function updateBookListDOM() {
     let index = 0;
-    myLibrary.forEach(() => {
-        const bookEntry = document.createElement('div');
-
-        bookEntry.classList.toggle('.book-list-entry');
-        bookEntry.setAttribute('id', `book-entry-${index}`);
-
+    myLibrary.forEach((book) => {
+        const bookEntry = createBookEntry(book, index);
+        bookList.appendChild(bookEntry);
+        index++;
     });
 }
 
 /**
- * Creates a book node/entry/element with specific styling
- * that can be added to a container of books
+ * Creates a new book element that contains styling
+ * for each book entry in the list and its corresponding
+ * background information.
  * @param {Book} bookInfo book information
  * @param {number} index an id-number to identify a book entry
  * @return {Element} newBookEntry returns new entry for the book list
  */
 function createBookEntry(bookInfo, index) {
     const bookElement = document.createElement('div');
-
     const columnNames = ['title', 'author', 'pages', 'status'];
 
     columnNames.forEach((name) => {
@@ -64,7 +63,6 @@ function createBookEntry(bookInfo, index) {
     bookElement.classList.add('book-list-entry');
 
     const newID = `book-entry-${index}`;
-
     if (document.getElementById(newID) != undefined) {
         throw Error(`Invalid index ${index}. Already exists.`);
     }
@@ -74,9 +72,12 @@ function createBookEntry(bookInfo, index) {
     return bookElement;
 }
 
-const bookContent = document.getElementById("book-content");
-bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 5));
-bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 2));
+const onePiece = new Book('Kevin Monisit',
+                        'The KevMan Book',
+                        21,
+                        'false');
 
-bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 3));
-bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 4));
+addBookToLibrary(onePiece);
+updateBookListDOM();
+
+// ======================== ADD BOOK FORM ========================
