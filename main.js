@@ -50,9 +50,33 @@ function updateBookListDOM() {
 function createBookEntry(bookInfo, index) {
     const bookElement = document.createElement('div');
 
-    bookElement.classList.add('book-list-entry');
-    bookElement.setAttribute('id', `book-entry-${index}`);
+    const columnNames = ['title', 'author', 'pages', 'status'];
 
+    columnNames.forEach((name) => {
+        const columnElement = document.createElement('div');
+
+        columnElement.classList.add(`${name}-column`);
+        columnElement.innerText = bookInfo[name];
+
+        bookElement.appendChild(columnElement);
+    });
+
+    bookElement.classList.add('book-list-entry');
+
+    const newID = `book-entry-${index}`;
+
+    if (document.getElementById(newID) != undefined) {
+        throw Error(`Invalid index ${index}. Already exists.`);
+    }
+
+    bookElement.setAttribute('id', newID);
 
     return bookElement;
 }
+
+const bookContent = document.getElementById("book-content");
+bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 5));
+bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 2));
+
+bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 3));
+bookContent.appendChild(createBookEntry(new Book("Eiichiro Oda", "One Piece", 21, false), 4));
