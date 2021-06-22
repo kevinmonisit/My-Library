@@ -34,7 +34,12 @@ function updateBookListDOM() {
     let index = 0;
     myLibrary.forEach((book) => {
         const bookEntry = createBookEntry(book, index);
+        const breadCrumb = document.createElement('div');
+        breadCrumb.classList.add('entry-breadcrumb');
+
+        bookList.appendChild(breadCrumb);
         bookList.appendChild(bookEntry);
+
         index++;
     });
 }
@@ -78,6 +83,60 @@ const onePiece = new Book('Kevin Monisit',
                         'false');
 
 addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
+addBookToLibrary(onePiece);
 updateBookListDOM();
 
 // ======================== ADD BOOK FORM ========================
+
+const input = {
+    'author': null,
+    'title': null,
+    'pages': null,
+    'read': null,
+    'submit': null,
+};
+
+for (const key in input) {
+    if ({}.hasOwnProperty.call(input, key)) {
+        input[key] = document.getElementById(`${key}-input`);
+    }
+}
+
+/**
+ * Creates a book object by referencing the input fields
+ * @return {Book} new book w/ info
+ */
+function retrieveBookInputInfo() {
+    // get all values from input object except last one (submit button)
+
+    // input object values are references to nodes so retrieve
+    // its current value
+    const bookInfo = Object.values(input).slice(0, -1).map((val) => {
+        return val.getAttribute('value');
+    });
+
+    return new Book(...bookInfo);
+}
+
+/**
+ * Clears all input fields
+ */
+function clearBookInputs() {
+   Object.values(input).forEach((element) => {
+       element.setAttribute('value', '');
+   });
+}
+
+input['submit'].addEventListener('click', () => {
+    const newBook = retrieveBookInputInfo();
+    addBookToLibrary(newBook);
+    updateBookListDOM();
+    clearBookInputs();
+});

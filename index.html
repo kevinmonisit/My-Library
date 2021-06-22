@@ -21,6 +21,8 @@
                 <div class='status-column'>Read</div>
             </div>
 
+            <div class='entry-breadcrumb' style='height:2px;'></div>
+
             <div id='book-content'>
                 <div class='book-list-entry'>
                    <div class='title-column'>One Piece</div>
@@ -28,22 +30,23 @@
                    <div class='pages-column'>984</div>
                    <div class='status-column'>Yes</div>
                 </div>
-
             </div>
+
+
         </div>
 
         <div id='right-content'>
-            <form id='book-input-form'>
+            <div id='book-input-form' target='_self'>
                 <label for='title-input'>Title of Book</label>
-                <input type='text' id='title-input' name='title-input'>
+                <input type='text' id='title-input' name='title-input' autocomplete="off">
                 <label for='author-input'>Author </label>
-                <input type='text' id='author-input' name='author-input'>
+                <input type='text' id='author-input' name='author-input' autocomplete="off">
                 <label for='pages-input'>Number of pages </label>
-                <input type='text' id='pages-input' name='pages-input' size='5' maxlength=5>
+                <input type='text' id='pages-input' name='pages-input' size='5' maxlength=5 autocomplete="off">
                 <label for='read-input'>Have you read this yet? </label>
                 <input type='checkbox' id='read-input' name='read-input'>
-                <button>Submit</button>
-            </form>
+                <button id='submit-input'>Submit</button>
+            </div>
         </div>
 
     </div>
