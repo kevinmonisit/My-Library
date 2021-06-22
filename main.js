@@ -24,14 +24,21 @@ function Book(author, title, pages, read) {
  */
 function addBookToLibrary(book) {
     myLibrary.push(book);
+    updateAndClearBookListDOM();
 }
 
 /**
  * Updates the book list in the DOM
  * by recreating the individual entries.
+ *
+ * This is useful when using sorting the files
+ * as the function rebuilds the entire list instead
+ * of pushing each entry at the end. However, with extremely
+ * long lists, this is not the most efficient way.
  */
-function updateBookListDOM() {
+function updateAndClearBookListDOM() {
     let index = 0;
+    bookList.innerHTML = '';
     myLibrary.forEach((book) => {
         const bookEntry = createBookEntry(book, index);
         const breadCrumb = document.createElement('div');
@@ -45,6 +52,17 @@ function updateBookListDOM() {
 }
 
 /**
+ * Function is called by an event listener and deletes
+ * the element (the book entry) that it is called by.
+ * @param {int} index index of book entry in library array
+ */
+function deleteEntry(index) {
+    console.log("clicked");
+    myLibrary.splice(index, 1);
+    updateAndClearBookListDOM();
+}
+
+/**
  * Creates a new book element that contains styling
  * for each book entry in the list and its corresponding
  * background information.
@@ -54,7 +72,7 @@ function updateBookListDOM() {
  */
 function createBookEntry(bookInfo, index) {
     const bookElement = document.createElement('div');
-    const columnNames = ['title', 'author', 'pages', 'status'];
+    const columnNames = ['title', 'author', 'pages', 'status', 'delete-button'];
 
     columnNames.forEach((name) => {
         const columnElement = document.createElement('div');
@@ -62,11 +80,28 @@ function createBookEntry(bookInfo, index) {
         columnElement.classList.add(`${name}-column`);
         columnElement.innerText = bookInfo[name];
 
+        if (name === 'delete-button') {
+            columnElement.innerText = '';
+            const button = document.createElement('button');
+            button.classList.add('delete-button');
+            button.innerText = 'X';
+
+            button.addEventListener('click', () => {
+                deleteEntry(index);
+            });
+
+            columnElement.appendChild(button);
+        }
+
         bookElement.appendChild(columnElement);
     });
 
     bookElement.classList.add('book-list-entry');
 
+    /**
+     * @TODO
+     * We don't really need the book-entry-index thing. Remove it when possible.
+     */
     const newID = `book-entry-${index}`;
     if (document.getElementById(newID) != undefined) {
         throw Error(`Invalid index ${index}. Already exists.`);
@@ -77,21 +112,12 @@ function createBookEntry(bookInfo, index) {
     return bookElement;
 }
 
-const onePiece = new Book('Kevin Monisit',
-                        'The KevMan Book',
-                        21,
+const onePiece = new Book('One Piece',
+                        'Eiichiro Oda',
+                        984,
                         'false');
 
 addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-addBookToLibrary(onePiece);
-updateBookListDOM();
 
 // ======================== ADD BOOK FORM ========================
 
@@ -118,8 +144,8 @@ function retrieveBookInputInfo() {
 
     // input object values are references to nodes so retrieve
     // its current value
-    const bookInfo = Object.values(input).slice(0, -1).map((val) => {
-        return val.getAttribute('value');
+    const bookInfo = Object.values(input).slice(0, -1).map((element) => {
+        return element.value;
     });
 
     return new Book(...bookInfo);
@@ -130,13 +156,12 @@ function retrieveBookInputInfo() {
  */
 function clearBookInputs() {
    Object.values(input).forEach((element) => {
-       element.setAttribute('value', '');
+       element.value = '';
    });
 }
 
 input['submit'].addEventListener('click', () => {
     const newBook = retrieveBookInputInfo();
     addBookToLibrary(newBook);
-    updateBookListDOM();
     clearBookInputs();
 });
