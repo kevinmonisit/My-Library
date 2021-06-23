@@ -137,6 +137,19 @@ a {
     height:75%;
     overflow: scroll;
     text-align: center;
+
+
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#book-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#book-content {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .book-list-entry {
