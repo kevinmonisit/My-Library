@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-const myLibrary = [];
+let myLibrary = [];
 const bookList = document.getElementById('book-content');
 
 /**
@@ -24,6 +24,7 @@ function Book(author, title, pages, read) {
  */
 function addBookToLibrary(book) {
     myLibrary.push(book);
+    saveLibraryToStorage();
     updateAndClearBookListDOM();
 }
 
@@ -57,8 +58,8 @@ function updateAndClearBookListDOM() {
  * @param {int} index index of book entry in library array
  */
 function deleteEntry(index) {
-    console.log("clicked");
     myLibrary.splice(index, 1);
+    saveLibraryToStorage();
     updateAndClearBookListDOM();
 }
 
@@ -93,6 +94,11 @@ function createBookEntry(bookInfo, index) {
             columnElement.appendChild(button);
         }
 
+        if (name === 'status') {
+            const readChecked = bookInfo.read;
+            columnElement.innerText = readChecked ? 'Yes' : 'No';
+        }
+
         bookElement.appendChild(columnElement);
     });
 
@@ -112,12 +118,39 @@ function createBookEntry(bookInfo, index) {
     return bookElement;
 }
 
+// ======================== ADDING BOOKS TO LIST ========================
+/**
+ * Saves library array into local storage
+ */
+function saveLibraryToStorage() {
+    localStorage.setItem('library', JSON.stringify(myLibrary));
+}
+
 const onePiece = new Book('One Piece',
                         'Eiichiro Oda',
                         984,
                         'false');
 
-addBookToLibrary(onePiece);
+/**
+ * Checks if a pre-existing library
+ * exists in local storage and sets library array
+ * to it.
+ *
+ * Otherwise, create it.
+ */
+function checkForLibraryInStorage() {
+    const library_ = localStorage.getItem('library');
+    if (!library_) {
+        localStorage.setItem('library', JSON.stringify(myLibrary));
+        // add example book entry initially
+        addBookToLibrary(onePiece);
+    } else {
+        myLibrary = JSON.parse(library_);
+        updateAndClearBookListDOM();
+    }
+}
+
+checkForLibraryInStorage();
 
 // ======================== ADD BOOK FORM ========================
 
@@ -145,7 +178,11 @@ function retrieveBookInputInfo() {
     // input object values are references to nodes so retrieve
     // its current value
     const bookInfo = Object.values(input).slice(0, -1).map((element) => {
-        return element.value;
+        if (element.id == 'read-input') {
+            return element.checked;
+        } else {
+            return element.value;
+        }
     });
 
     return new Book(...bookInfo);
